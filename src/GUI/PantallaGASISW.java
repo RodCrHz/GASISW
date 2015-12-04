@@ -5,6 +5,10 @@ import gnu.io.CommPortIdentifier;
 import gnu.io.SerialPort;
 import java.io.OutputStream;
 import java.util.Enumeration;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /*
@@ -14,11 +18,87 @@ import javax.swing.JOptionPane;
 
 /**
  *
- * @author mario
+ * @author Rodrigo
  */
 public class PantallaGASISW extends javax.swing.JFrame {
+   public String tipoGAS = null;
+   
+    Timer timer = new Timer(); // El timer que se encarga de administrar los tiempo de repeticion
+	public int segundos; // manejar el valor del contador
+	public boolean frozen; // manejar el estado del contador TIMER AUTOMATICO -- True Detenido | False Corriendo
+ 
+	// clase interna que representa una tarea, se puede crear varias tareas y asignarle al timer luego
+	class MiTarea extends TimerTask {
+		public void run() {
+			segundos++;
+			System.out.println(segundos);
+			// aqui se puede escribir el codigo de la tarea que necesitamos ejecutar
+                        
+                        if(segundos<5){
+                            btnPanico.setEnabled(false);
+                            btnServir.setEnabled(false);
+                        }else{
+                            btnPanico.setEnabled(true);
+                            btnServir.setEnabled(true);
+                            
+                        }
+                            
+                        
+                                                    
+		}// end run()
+	}// end SincronizacionAutomatica
+ 
+	public void Start(int pSeg) throws Exception {
+		frozen = false;
+		// le asignamos una tarea al timer
+		timer.schedule(new MiTarea(), 0, pSeg * 1000);
+	}// end Start
+ 
+	public void Stop() {
+		System.out.println("Stop");
+		frozen = true;
+	}// end Stop
+ 
+    public void Reset() {
+		System.out.println("Reset");
+		frozen = true;
+		segundos = 0;
+	}// end Reset
+    
+    public void llenarGal(){
+        
+         String dolares = txtDolares.getText();
 
-      
+        if (optRegular.isSelected()==true){
+            tipoGAS = "2.20";
+        }else if (optDiesel.isSelected()==true){
+            tipoGAS = "2.10";
+        }else{
+            tipoGAS = "2.30";
+        }
+
+        double calculo = Double.parseDouble(dolares)/Double.parseDouble(tipoGAS);
+
+        txtGalones.setText(String.valueOf(calculo));
+        
+        }
+      public void llenarDol(){
+        
+         String galones = txtGalones.getText();
+
+        if (optRegular.isSelected()==true){
+            tipoGAS = "2.20";
+        }else if (optDiesel.isSelected()==true){
+            tipoGAS = "2.10";
+        }else{
+            tipoGAS = "2.30";
+        }
+
+        double calculo = Double.parseDouble(galones)*Double.parseDouble(tipoGAS);
+
+        txtDolares.setText(String.valueOf(calculo));
+        
+        }
     
     //Variables de conexión
     private OutputStream output=null;
@@ -32,7 +112,7 @@ public class PantallaGASISW extends javax.swing.JFrame {
     
     public PantallaGASISW() {
         initComponents();
-        inicializarConexion();
+      //  inicializarConexion();
             }
     
     public void inicializarConexion(){
@@ -101,10 +181,13 @@ public class PantallaGASISW extends javax.swing.JFrame {
         optRegular = new javax.swing.JRadioButton();
         optEspecial = new javax.swing.JRadioButton();
         optDiesel = new javax.swing.JRadioButton();
-        jLabel3 = new javax.swing.JLabel();
-        txtGalones = new javax.swing.JTextField();
         btnServir = new javax.swing.JButton();
         btnPanico = new javax.swing.JButton();
+        jLabel4 = new javax.swing.JLabel();
+        txtDolares = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        txtGalones = new javax.swing.JTextField();
+        btnval = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -116,14 +199,32 @@ public class PantallaGASISW extends javax.swing.JFrame {
 
         buttonGroup1.add(optRegular);
         optRegular.setText("Regular");
+        optRegular.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                optRegularFocusGained(evt);
+            }
+        });
+        optRegular.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                optRegularActionPerformed(evt);
+            }
+        });
 
         buttonGroup1.add(optEspecial);
         optEspecial.setText("Especial");
+        optEspecial.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                optEspecialActionPerformed(evt);
+            }
+        });
 
         buttonGroup1.add(optDiesel);
         optDiesel.setText("Diesel");
-
-        jLabel3.setText("Cantidad en Galones");
+        optDiesel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                optDieselActionPerformed(evt);
+            }
+        });
 
         btnServir.setText("Servir");
         btnServir.addActionListener(new java.awt.event.ActionListener() {
@@ -139,6 +240,44 @@ public class PantallaGASISW extends javax.swing.JFrame {
             }
         });
 
+        jLabel4.setText("Cantidad en Dolares");
+
+        txtDolares.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtDolaresFocusLost(evt);
+            }
+        });
+        txtDolares.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtDolaresActionPerformed(evt);
+            }
+        });
+        txtDolares.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtDolaresKeyReleased(evt);
+            }
+        });
+
+        jLabel3.setText("Cantidad en Galones");
+
+        txtGalones.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtGalonesFocusLost(evt);
+            }
+        });
+        txtGalones.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtGalonesKeyReleased(evt);
+            }
+        });
+
+        btnval.setText("valores");
+        btnval.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnvalActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -147,29 +286,42 @@ public class PantallaGASISW extends javax.swing.JFrame {
                 .addGap(46, 46, 46)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnPanico)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnServir)
-                        .addGap(50, 50, 50))
-                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel3))
+                            .addComponent(jLabel2))
                         .addGap(27, 27, 27)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(optDiesel)
                             .addComponent(optRegular)
                             .addComponent(cmbEstacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(txtGalones, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(optEspecial, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                        .addContainerGap(145, Short.MAX_VALUE))))
+                            .addComponent(optEspecial))
+                        .addContainerGap(145, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel3)
+                                    .addComponent(jLabel4))
+                                .addGap(27, 27, 27)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtGalones)
+                                    .addComponent(txtDolares)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnPanico)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnServir)))
+                        .addGap(50, 50, 50))))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnval)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(45, 45, 45)
+                .addGap(16, 16, 16)
+                .addComponent(btnval)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(cmbEstacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -181,11 +333,15 @@ public class PantallaGASISW extends javax.swing.JFrame {
                 .addComponent(optDiesel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(optEspecial)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(txtDolares, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(22, 22, 22)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(txtGalones, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(26, 26, 26)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnServir)
                     .addComponent(btnPanico))
@@ -197,8 +353,8 @@ public class PantallaGASISW extends javax.swing.JFrame {
 
     private void btnServirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnServirActionPerformed
         // TODO add your handling code here:
-        String estacion;
-        String tipoGAS = null;
+                String estacion;
+        
         String Galones;
         
         if (cmbEstacion.getSelectedItem()=="Estacion 1"){
@@ -215,25 +371,106 @@ public class PantallaGASISW extends javax.swing.JFrame {
             tipoGAS = "D";
         }else if ((optEspecial.isSelected()==true)&&(estacion.equals("1"))){
             tipoGAS = "P";
-        }else{
+        }else if ((optEspecial.isSelected()==true)&&(estacion.equals("2"))){
             JOptionPane.showMessageDialog(null, "Especial no disponible en bomba 2");
+        }else{
+            JOptionPane.showMessageDialog(null, "Por favor, elija un tipo de combustible");
             
         }
     
-        Galones = txtGalones.getText(); 
+        Galones = txtGalones.getText();
         
                
        //JOptionPane.showMessageDialog(null,estacion+tipoGAS+Galones); 
         String cadena =estacion+"\n"+tipoGAS+"\n"+Galones+"\n";
-        enviarDatos(cadena);
+        //enviarDatos(cadena);
+        
+        int contador = 0; 
+        if ((optDiesel.isSelected()==true)&&(estacion.equals("1"))){
+            contador =1;
+            
+        }else if ((optRegular.isSelected()==true)&&(estacion.equals("1"))){
+            contador =2;
+        }else if ((optEspecial.isSelected()==true)&&(estacion.equals("1"))){
+            contador =3;
+        }else if ((optRegular.isSelected()==true)&&(estacion.equals("2"))){
+            contador =5;
+        }else if ((optDiesel.isSelected()==true)&&(estacion.equals("2"))){
+            contador =4;
+        }
+        
+        if ((contador==1)||(contador==2)||(contador==3)){
+            
+        }
         
     }//GEN-LAST:event_btnServirActionPerformed
 
     private void btnPanicoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPanicoActionPerformed
         // TODO add your handling code here:
-        enviarDatos("x");
+         try {
+            // TODO add your handling code here:
+            Start(5);
+            Reset();
+            
+        } catch (Exception ex) {
+            Logger.getLogger(PantallaGASISW.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        //enviarDatos("x");
         
     }//GEN-LAST:event_btnPanicoActionPerformed
+
+    private void txtDolaresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDolaresActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtDolaresActionPerformed
+
+    private void txtDolaresKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDolaresKeyReleased
+        // TODO add your handling code here:
+        llenarGal();
+        
+    }//GEN-LAST:event_txtDolaresKeyReleased
+
+    private void btnvalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnvalActionPerformed
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_btnvalActionPerformed
+
+    private void optRegularFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_optRegularFocusGained
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_optRegularFocusGained
+
+    private void optRegularActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_optRegularActionPerformed
+        // TODO add your handling code here:
+        //llenarGal();
+        //llenarDol();
+    }//GEN-LAST:event_optRegularActionPerformed
+
+    private void optDieselActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_optDieselActionPerformed
+        // TODO add your handling code here:
+       // llenarGal();
+       // llenarDol();
+    }//GEN-LAST:event_optDieselActionPerformed
+
+    private void optEspecialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_optEspecialActionPerformed
+        // TODO add your handling code here:
+       // llenarGal();
+       // llenarDol();
+    }//GEN-LAST:event_optEspecialActionPerformed
+
+    private void txtGalonesKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtGalonesKeyReleased
+        // TODO add your handling code here:
+        llenarDol();
+    }//GEN-LAST:event_txtGalonesKeyReleased
+
+    private void txtDolaresFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtDolaresFocusLost
+        // TODO add your handling code here:
+        llenarGal();
+    }//GEN-LAST:event_txtDolaresFocusLost
+
+    private void txtGalonesFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtGalonesFocusLost
+        // TODO add your handling code here:
+        llenarDol();
+    }//GEN-LAST:event_txtGalonesFocusLost
 
     /**
      * @param args the command line arguments
@@ -273,6 +510,7 @@ public class PantallaGASISW extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnPanico;
     private javax.swing.JButton btnServir;
+    private javax.swing.JButton btnval;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.ButtonGroup buttonGroup2;
     private javax.swing.ButtonGroup buttonGroup3;
@@ -281,9 +519,11 @@ public class PantallaGASISW extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JRadioButton optDiesel;
     private javax.swing.JRadioButton optEspecial;
     private javax.swing.JRadioButton optRegular;
+    private javax.swing.JTextField txtDolares;
     private javax.swing.JTextField txtGalones;
     // End of variables declaration//GEN-END:variables
 }
