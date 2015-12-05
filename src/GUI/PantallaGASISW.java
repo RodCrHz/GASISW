@@ -128,13 +128,13 @@ public class PantallaGASISW extends javax.swing.JFrame {
         }
     
     //Variables de conexión
-    private OutputStream output=null;
+  /*  private OutputStream output=null;
     SerialPort serialPort;
     private final String PUERTO="COM3";
     
     private static final int TIMEOUT=2000; //Milisegundos
     
-    private static final int DATA_RATE=115200;
+    private static final int DATA_RATE=115200; */
     
     
     public PantallaGASISW() {
@@ -142,7 +142,7 @@ public class PantallaGASISW extends javax.swing.JFrame {
        // inicializarConexion();
             }
     
-    public void inicializarConexion(){
+  /*  public void inicializarConexion(){
         CommPortIdentifier puertoID=null;
         Enumeration puertoEnum=CommPortIdentifier.getPortIdentifiers();
         
@@ -171,7 +171,7 @@ public class PantallaGASISW extends javax.swing.JFrame {
             System.exit(ERROR);
             
         }
-    }
+    } 
     
     private void enviarDatos(String datos){
         try{
@@ -186,7 +186,7 @@ public class PantallaGASISW extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this, mensaje, "ERROR", JOptionPane.ERROR_MESSAGE);
     }
     
-    
+    */
     
     
     /**
