@@ -48,7 +48,7 @@ public class PantallaGASISW extends javax.swing.JFrame {
 		}// end run()
 	}// end SincronizacionAutomatica
         
-        class estacion extends TimerTask {
+        class estacion1 extends TimerTask {
 		public void run() {
 			segundos++;
 			System.out.println(segundos);
@@ -56,30 +56,14 @@ public class PantallaGASISW extends javax.swing.JFrame {
          
          if(segundos < Integer.parseInt(txtGalones.getText())){
                        
-        if (cmbEstacion.getSelectedItem()=="Estacion 1"){
-           
-            cmbEstacion.removeItem("Estacion 1");
-            cmbEstacion.addItem("Estacion 1 no disponible");
-            
-        }else if (cmbEstacion.getSelectedItem()=="Estacion 2"){
-            
-            cmbEstacion.removeItem("Estacion 2");
-            cmbEstacion.addItem("Estacion 2 no disponible");
-        }                  
+                   
+            cmbEstacion1.setEnabled(false);
+               
          
          }else{
              
                         
-          if (cmbEstacion.getSelectedItem()=="Estacion 1"){
-           
-            cmbEstacion.removeItem("Estacion 1 no disponible");
-            cmbEstacion.addItem("Estacion 1");
-            
-        }else if (cmbEstacion.getSelectedItem()=="Estacion 2"){
-            
-            cmbEstacion.removeItem("Estacion 2 no disponible");
-            cmbEstacion.addItem("Estacion 2");
-        }        
+         cmbEstacion1.setEnabled(true);
           
               
          }                
@@ -87,17 +71,44 @@ public class PantallaGASISW extends javax.swing.JFrame {
                                                     
 		}// end run()
 	}// end SincronizacionAutomatica
- 
+        class estacion2 extends TimerTask {
+		public void run() {
+			segundos++;
+			System.out.println(segundos);
+			// aqui se puede escribir el codigo de la tarea que necesitamos ejecutar
+         
+         if(segundos < Integer.parseInt(txtGalones.getText())){
+                       
+                   
+            cmbEstacion2.setEnabled(false);
+               
+         
+         }else{
+             
+                        
+         cmbEstacion2.setEnabled(true);
+          
+              
+         }                
+                        
+                                                    
+		}// end run()
+	}// end SincronizacionAutomatica
 	public void Start(int pSeg) throws Exception {
 		frozen = false;
 		// le asignamos una tarea al timer
 		timer.schedule(new panico(), 0, pSeg * 1000);
 	}// end Start
         
-        public void StartGAS(int pSeg) throws Exception {
+        public void StartGAS1(int pSeg) throws Exception {
 		frozen = false;
 		// le asignamos una tarea al timer
-		timer.schedule(new estacion(), 0, pSeg * 1000);
+		timer.schedule(new estacion1(), 0, pSeg * 1000);
+	}// end Start
+        public void StartGAS2(int pSeg) throws Exception {
+		frozen = false;
+		// le asignamos una tarea al timer
+		timer.schedule(new estacion2(), 0, pSeg * 1000);
 	}// end Start
  
 	public void Stop() {
@@ -111,15 +122,15 @@ public class PantallaGASISW extends javax.swing.JFrame {
 		segundos = 0;
 	}// end Reset
     
-    public void llenarGal(){
+    public void llenarGal1(){
         
          String dolares = txtDolares.getText();
 
-        if (optRegular.isSelected()==true){
+        if (cmbEstacion1.getSelectedItem()=="Diesel E1"){
             tipoGAS = "2.20";
-        }else if (optDiesel.isSelected()==true){
+        }else if (cmbEstacion1.getSelectedItem()=="Regular E1"){
             tipoGAS = "2.10";
-        }else{
+        }else if (cmbEstacion1.getSelectedItem()=="Premium E1"){
             tipoGAS = "2.30";
         }
 
@@ -128,17 +139,33 @@ public class PantallaGASISW extends javax.swing.JFrame {
         txtGalones.setText(String.valueOf(calculo));
         
         }
-      public void llenarDol(){
+       public void llenarGal2(){
+        
+         String dolares = txtDolares.getText();
+
+        if (cmbEstacion1.getSelectedItem()=="Diesel E1"){
+            tipoGAS = "2.20";
+        }else if (cmbEstacion1.getSelectedItem()=="Regular E1"){
+            tipoGAS = "2.10";
+        
+        double calculo = Double.parseDouble(dolares)/Double.parseDouble(tipoGAS);
+
+        txtGalones.setText(String.valueOf(calculo));
+        
+        }
+       }
+    public void llenarDol(){
         
          String galones = txtGalones.getText();
 
-        if (optRegular.isSelected()==true){
+          if (cmbEstacion1.getSelectedItem()=="Diesel E1"){
             tipoGAS = "2.20";
-        }else if (optDiesel.isSelected()==true){
+        }else if (cmbEstacion1.getSelectedItem()=="Regular E1"){
             tipoGAS = "2.10";
-        }else{
+        }else if (cmbEstacion1.getSelectedItem()=="Premium E1"){
             tipoGAS = "2.30";
         }
+       
 
         double calculo = Double.parseDouble(galones)*Double.parseDouble(tipoGAS);
 
@@ -222,11 +249,7 @@ public class PantallaGASISW extends javax.swing.JFrame {
         buttonGroup3 = new javax.swing.ButtonGroup();
         buttonGroup4 = new javax.swing.ButtonGroup();
         jLabel1 = new javax.swing.JLabel();
-        cmbEstacion = new javax.swing.JComboBox();
-        jLabel2 = new javax.swing.JLabel();
-        optRegular = new javax.swing.JRadioButton();
-        optEspecial = new javax.swing.JRadioButton();
-        optDiesel = new javax.swing.JRadioButton();
+        cmbEstacion1 = new javax.swing.JComboBox();
         btnServir = new javax.swing.JButton();
         btnPanico = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
@@ -234,43 +257,14 @@ public class PantallaGASISW extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         txtGalones = new javax.swing.JTextField();
         btnval = new javax.swing.JButton();
+        cmbEstacion2 = new javax.swing.JComboBox();
+        jLabel5 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel1.setText("Seleccione la Estacion:");
+        jLabel1.setText("Estacion1");
 
-        cmbEstacion.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Estacion 1", "Estacion 2" }));
-
-        jLabel2.setText("Tipo de Gasolina");
-
-        buttonGroup1.add(optRegular);
-        optRegular.setText("Regular");
-        optRegular.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                optRegularFocusGained(evt);
-            }
-        });
-        optRegular.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                optRegularActionPerformed(evt);
-            }
-        });
-
-        buttonGroup1.add(optEspecial);
-        optEspecial.setText("Especial");
-        optEspecial.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                optEspecialActionPerformed(evt);
-            }
-        });
-
-        buttonGroup1.add(optDiesel);
-        optDiesel.setText("Diesel");
-        optDiesel.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                optDieselActionPerformed(evt);
-            }
-        });
+        cmbEstacion1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Seleccione", "Diesel E1", "Regular E1", "Premium E1" }));
 
         btnServir.setText("Servir");
         btnServir.addActionListener(new java.awt.event.ActionListener() {
@@ -324,6 +318,15 @@ public class PantallaGASISW extends javax.swing.JFrame {
             }
         });
 
+        cmbEstacion2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Seleccione", "Diesel E2", "Regular E2" }));
+        cmbEstacion2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbEstacion2ActionPerformed(evt);
+            }
+        });
+
+        jLabel5.setText("Estacion2");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -334,14 +337,12 @@ public class PantallaGASISW extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
-                            .addComponent(jLabel2))
-                        .addGap(27, 27, 27)
+                            .addComponent(jLabel5))
+                        .addGap(59, 59, 59)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(optDiesel)
-                            .addComponent(optRegular)
-                            .addComponent(cmbEstacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(optEspecial))
-                        .addContainerGap(145, Short.MAX_VALUE))
+                            .addComponent(cmbEstacion1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cmbEstacion2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap(169, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createSequentialGroup()
@@ -370,16 +371,12 @@ public class PantallaGASISW extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(cmbEstacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(39, 39, 39)
+                    .addComponent(cmbEstacion1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(27, 27, 27)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(optRegular))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(optDiesel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(optEspecial)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(jLabel5)
+                    .addComponent(cmbEstacion2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(31, 31, 31)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(txtDolares, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -387,11 +384,11 @@ public class PantallaGASISW extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(txtGalones, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
+                .addGap(45, 45, 45)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnServir)
                     .addComponent(btnPanico))
-                .addGap(23, 23, 23))
+                .addContainerGap(47, Short.MAX_VALUE))
         );
 
         pack();
@@ -403,7 +400,7 @@ public class PantallaGASISW extends javax.swing.JFrame {
         
         String Galones;
         
-        if (cmbEstacion.getSelectedItem()=="Estacion 1"){
+        if (cmbEstacion1.getSelectedItem()=="Estacion 1"){
             estacion ="1";
         }else{
             estacion ="2";
@@ -473,29 +470,6 @@ public class PantallaGASISW extends javax.swing.JFrame {
         
     }//GEN-LAST:event_btnvalActionPerformed
 
-    private void optRegularFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_optRegularFocusGained
-        // TODO add your handling code here:
-        
-    }//GEN-LAST:event_optRegularFocusGained
-
-    private void optRegularActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_optRegularActionPerformed
-        // TODO add your handling code here:
-        //llenarGal();
-        //llenarDol();
-    }//GEN-LAST:event_optRegularActionPerformed
-
-    private void optDieselActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_optDieselActionPerformed
-        // TODO add your handling code here:
-       // llenarGal();
-       // llenarDol();
-    }//GEN-LAST:event_optDieselActionPerformed
-
-    private void optEspecialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_optEspecialActionPerformed
-        // TODO add your handling code here:
-       // llenarGal();
-       // llenarDol();
-    }//GEN-LAST:event_optEspecialActionPerformed
-
     private void txtGalonesKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtGalonesKeyReleased
         // TODO add your handling code here:
         llenarDol();
@@ -503,13 +477,17 @@ public class PantallaGASISW extends javax.swing.JFrame {
 
     private void txtDolaresFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtDolaresFocusLost
         // TODO add your handling code here:
-        llenarGal();
+        llenarGal1();
     }//GEN-LAST:event_txtDolaresFocusLost
 
     private void txtGalonesFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtGalonesFocusLost
         // TODO add your handling code here:
         llenarDol();
     }//GEN-LAST:event_txtGalonesFocusLost
+
+    private void cmbEstacion2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbEstacion2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmbEstacion2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -554,14 +532,12 @@ public class PantallaGASISW extends javax.swing.JFrame {
     private javax.swing.ButtonGroup buttonGroup2;
     private javax.swing.ButtonGroup buttonGroup3;
     private javax.swing.ButtonGroup buttonGroup4;
-    private javax.swing.JComboBox cmbEstacion;
+    private javax.swing.JComboBox cmbEstacion1;
+    private javax.swing.JComboBox cmbEstacion2;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JRadioButton optDiesel;
-    private javax.swing.JRadioButton optEspecial;
-    private javax.swing.JRadioButton optRegular;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JTextField txtDolares;
     private javax.swing.JTextField txtGalones;
     // End of variables declaration//GEN-END:variables
