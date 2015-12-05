@@ -54,16 +54,35 @@ public class PantallaGASISW extends javax.swing.JFrame {
 			System.out.println(segundos);
 			// aqui se puede escribir el codigo de la tarea que necesitamos ejecutar
          
+         if(segundos < Integer.parseInt(txtGalones.getText())){
                        
         if (cmbEstacion.getSelectedItem()=="Estacion 1"){
            
             cmbEstacion.removeItem("Estacion 1");
+            cmbEstacion.addItem("Estacion 1 no disponible");
             
         }else if (cmbEstacion.getSelectedItem()=="Estacion 2"){
             
             cmbEstacion.removeItem("Estacion 2");
+            cmbEstacion.addItem("Estacion 2 no disponible");
         }                  
-                            
+         
+         }else{
+             
+                        
+          if (cmbEstacion.getSelectedItem()=="Estacion 1"){
+           
+            cmbEstacion.removeItem("Estacion 1 no disponible");
+            cmbEstacion.addItem("Estacion 1");
+            
+        }else if (cmbEstacion.getSelectedItem()=="Estacion 2"){
+            
+            cmbEstacion.removeItem("Estacion 2 no disponible");
+            cmbEstacion.addItem("Estacion 2");
+        }        
+          
+              
+         }                
                         
                                                     
 		}// end run()
