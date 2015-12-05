@@ -28,7 +28,7 @@ public class PantallaGASISW extends javax.swing.JFrame {
 	public boolean frozen; // manejar el estado del contador TIMER AUTOMATICO -- True Detenido | False Corriendo
  
 	// clase interna que representa una tarea, se puede crear varias tareas y asignarle al timer luego
-	class MiTarea extends TimerTask {
+	class panico extends TimerTask {
 		public void run() {
 			segundos++;
 			System.out.println(segundos);
@@ -47,11 +47,38 @@ public class PantallaGASISW extends javax.swing.JFrame {
                                                     
 		}// end run()
 	}// end SincronizacionAutomatica
+        
+        class estacion extends TimerTask {
+		public void run() {
+			segundos++;
+			System.out.println(segundos);
+			// aqui se puede escribir el codigo de la tarea que necesitamos ejecutar
+         
+                       
+        if (cmbEstacion.getSelectedItem()=="Estacion 1"){
+           
+            cmbEstacion.removeItem("Estacion 1");
+            
+        }else if (cmbEstacion.getSelectedItem()=="Estacion 2"){
+            
+            cmbEstacion.removeItem("Estacion 2");
+        }                  
+                            
+                        
+                                                    
+		}// end run()
+	}// end SincronizacionAutomatica
  
 	public void Start(int pSeg) throws Exception {
 		frozen = false;
 		// le asignamos una tarea al timer
-		timer.schedule(new MiTarea(), 0, pSeg * 1000);
+		timer.schedule(new panico(), 0, pSeg * 1000);
+	}// end Start
+        
+        public void StartGAS(int pSeg) throws Exception {
+		frozen = false;
+		// le asignamos una tarea al timer
+		timer.schedule(new estacion(), 0, pSeg * 1000);
 	}// end Start
  
 	public void Stop() {
@@ -112,7 +139,7 @@ public class PantallaGASISW extends javax.swing.JFrame {
     
     public PantallaGASISW() {
         initComponents();
-      //  inicializarConexion();
+       // inicializarConexion();
             }
     
     public void inicializarConexion(){
@@ -384,30 +411,23 @@ public class PantallaGASISW extends javax.swing.JFrame {
        //JOptionPane.showMessageDialog(null,estacion+tipoGAS+Galones); 
         String cadena =estacion+"\n"+tipoGAS+"\n"+Galones+"\n";
         //enviarDatos(cadena);
+        double tiempogalD = Double.parseDouble(Galones); 
+        int tiempogalI = (int)tiempogalD;
         
-        int contador = 0; 
-        if ((optDiesel.isSelected()==true)&&(estacion.equals("1"))){
-            contador =1;
-            
-        }else if ((optRegular.isSelected()==true)&&(estacion.equals("1"))){
-            contador =2;
-        }else if ((optEspecial.isSelected()==true)&&(estacion.equals("1"))){
-            contador =3;
-        }else if ((optRegular.isSelected()==true)&&(estacion.equals("2"))){
-            contador =5;
-        }else if ((optDiesel.isSelected()==true)&&(estacion.equals("2"))){
-            contador =4;
-        }
+       try {
+           StartGAS(tiempogalI);
+       } catch (Exception ex) {
+           Logger.getLogger(PantallaGASISW.class.getName()).log(Level.SEVERE, null, ex);
+       }
+
         
-        if ((contador==1)||(contador==2)||(contador==3)){
-            
-        }
         
     }//GEN-LAST:event_btnServirActionPerformed
 
     private void btnPanicoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPanicoActionPerformed
         // TODO add your handling code here:
-         try {
+        //enviarDatos("x"); 
+        try {
             // TODO add your handling code here:
             Start(5);
             Reset();
@@ -415,7 +435,7 @@ public class PantallaGASISW extends javax.swing.JFrame {
         } catch (Exception ex) {
             Logger.getLogger(PantallaGASISW.class.getName()).log(Level.SEVERE, null, ex);
         }
-        //enviarDatos("x");
+        
         
     }//GEN-LAST:event_btnPanicoActionPerformed
 
